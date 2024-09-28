@@ -34,13 +34,11 @@ public class PetDataController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PetData> getPetData(@PathVariable("id") Long id) {
-        try {
-            return new ResponseEntity<>(petDataService.getPetData(id), HttpStatus.OK);
-        } catch (PetDataNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        PetData petData = petDataService.getPetData(id);
+        if (petData == null) {
+            throw new PetDataNotFoundException(id);
         }
+        return new ResponseEntity<>(petData, HttpStatus.OK);
     }
 
     @PostMapping
