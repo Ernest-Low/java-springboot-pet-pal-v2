@@ -5,7 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import org.springframework.beans.factory.annotation.Value;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +22,29 @@ import java.util.function.Function;
 @Service
 public class JwtTokenUtil {
 
-    @Value("${jwtSecret}")
-    private String secretkey;
+    private final JwtConfig jwtConfig;
+
+    public JwtTokenUtil(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+    }
+
+    public String getSecretKey() {
+        return jwtConfig.getSecret();
+    }
+
+    // @Value("${jwtSecret}")
+    // private String secretkey;
     // private String secretkey = "";
 
     // public JwtTokenUtil() {
 
-    //     try {
-    //         KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-    //         SecretKey sk = keyGen.generateKey();
-    //         secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
-    //     } catch (NoSuchAlgorithmException e) {
-    //         throw new RuntimeException(e);
-    //     }
+    // try {
+    // KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
+    // SecretKey sk = keyGen.generateKey();
+    // secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
+    // } catch (NoSuchAlgorithmException e) {
+    // throw new RuntimeException(e);
+    // }
     // }
 
     public String generateToken(String email) {
@@ -51,7 +62,7 @@ public class JwtTokenUtil {
     }
 
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+        byte[] keyBytes = Decoders.BASE64.decode(getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
