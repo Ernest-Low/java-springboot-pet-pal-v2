@@ -21,8 +21,8 @@ WORKDIR /app
 # Copy the jar file from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Copy the env.properties file into the image?
-COPY env.properties .
+# Do this only for local - as it won't be in git
+# COPY env.properties .
 
 # Expose the port the application runs on
 EXPOSE 8080
